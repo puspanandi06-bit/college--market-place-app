@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://your-vercel-backend.vercel.app";
+const API_BASE_URL = "https://college-market-place-app.vercel.app";
 
 async function request(path, { method = "GET", body, token, headers = {} } = {}) {
   const finalHeaders = {

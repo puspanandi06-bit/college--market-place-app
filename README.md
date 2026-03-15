@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## CampusMarket (React Native + Expo)
 
 Campus-focused marketplace app built with **React Native (Expo)** and **Firebase**.
@@ -50,3 +51,6 @@ npm start
 
 Then open it in the Expo Go app or an emulator/simulator.
 
+=======
+# college--market-place-app
+>>>>>>> 8f39f753ff55e3c54460d82f5c4e8633187dc318
