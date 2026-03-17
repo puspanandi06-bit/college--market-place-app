@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CampusCart – Buy & Sell on Campus</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --pr:#FF6B35;--prd:#e55a25;--prl:#fff0eb;
+  --sec:#1A1A2E;--acc:#00C9A7;--accl:#e0faf5;
+  --bg:#F7F8FC;--wh:#FFFFFF;
+  --g100:#F3F4F6;--g200:#E5E7EB;--g400:#9CA3AF;--g600:#4B5563;--g800:#1F2937;
+  --red:#EF4444;--yel:#F59E0B;--grn:#10B981;
+  --sh:0 4px 20px rgba(0,0,0,.07);--shl:0 10px 36px rgba(0,0,0,.12);
+  --nh:60px;--bh:68px;
+  --fd:'Syne',sans-serif;--fb:'DM Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);background:var(--bg);color:var(--g800);min-height:100vh;overflow-x:hidden;}
+button{cursor:pointer;border:none;background:none;font-family:var(--fb);}
+input,textarea,select{font-family:var(--fb);border:none;outline:none;}
+img{max-width:100%;display:block;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-thumb{background:var(--g200);border-radius:99px;}
+
+/* SCREENS */
+.scr{display:none;min-height:100vh;}
+#auth.scr{flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 18px;position:relative;overflow:hidden;
+  background:linear-gradient(145deg,#1A1A2E,#16213E,#0F3460);}
+#auth.scr.on{display:flex!important;}
+#app.scr.on{display:block;}
+
+@keyframes up{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes sp{to{transform:rotate(360deg)}}
+@keyframes sh{from{background-position:200%}to{background-position:-200%}}
+
+/* AUTH */
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.2;pointer-events:none;}
+.b1{width:320px;height:320px;background:#FF6B35;top:-70px;right:-70px;}
+.b2{width:240px;height:240px;background:#00C9A7;bottom:-50px;left:-50px;}
+.alogo{text-align:center;margin-bottom:30px;z-index:1;animation:up .5s ease;}
+.alogo .lbox{width:66px;height:66px;background:var(--pr);border-radius:17px;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 11px;
+  font-size:28px;box-shadow:0 8px 22px rgba(255,107,53,.5);}
+.alogo h1{font-family:var(--fd);font-size:25px;font-weight:800;color:#fff;}
+.alogo p{color:rgba(255,255,255,.4);font-size:13px;margin-top:3px;}
+.acard{background:rgba(255,255,255,.06);backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:22px;
+  width:100%;max-width:390px;z-index:1;animation:up .5s .08s ease both;}
+.atabs{display:flex;gap:4px;background:rgba(0,0,0,.22);border-radius:9px;padding:4px;margin-bottom:20px;}
+.atab{flex:1;padding:8px;border-radius:6px;font-size:14px;font-weight:600;
+  color:rgba(255,255,255,.4);transition:.2s;}
+.atab.on{background:var(--pr);color:#fff;}
+.fg{margin-bottom:13px;}
+.fl{display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,.55);
+  margin-bottom:5px;letter-spacing:.3px;}
+.fi{width:100%;padding:11px 14px;background:rgba(255,255,255,.09);
+  border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-size:14px;transition:.2s;}
+.fi::placeholder{color:rgba(255,255,255,.25);}
+.fi:focus{border-color:var(--pr);background:rgba(255,255,255,.13);}
+.pw-w{position:relative;}
+.pw-t{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:rgba(255,255,255,.3);cursor:pointer;padding:4px;line-height:0;}
+.btn-a{width:100%;padding:13px;background:var(--pr);border-radius:10px;
+  font-size:15px;font-weight:700;color:#fff;margin-top:5px;
+  transition:.2s;box-shadow:0 4px 14px rgba(255,107,53,.4);}
+.btn-a:hover{background:var(--prd);transform:translateY(-1px);}
+.btn-a:active{transform:none;}
+.btn-demo{width:100%;padding:12px;background:rgba(255,255,255,.09);border-radius:10px;
+  font-size:13px;font-weight:600;color:rgba(255,255,255,.75);margin-top:7px;
+  border:1px solid rgba(255,255,255,.14);transition:.2s;}
+.btn-demo:hover{background:rgba(255,255,255,.15);}
+.adiv{text-align:center;color:rgba(255,255,255,.22);font-size:12px;margin:11px 0;}
+.aerr{background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.28);
+  color:#fca5a5;border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:9px;display:none;}
+.aok{background:rgba(16,185,129,.14);border:1px solid rgba(16,185,129,.28);
+  color:#6ee7b7;border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:9px;display:none;}
+
+/* APP SHELL */
+#app{padding-bottom:calc(var(--bh) + 6px);}
+.tnav{position:sticky;top:0;z-index:100;background:var(--wh);
+  border-bottom:1px solid var(--g200);height:var(--nh);
+  display:flex;align-items:center;padding:0 13px;gap:9px;}
+.tlogo{font-family:var(--fd);font-weight:800;font-size:20px;color:var(--pr);flex-shrink:0;}
+.tlogo span{color:var(--sec);}
+.srch{flex:1;display:flex;align-items:center;gap:7px;background:var(--g100);
+  border-radius:10px;padding:0 11px;height:39px;min-width:0;}
+.srch svg{flex-shrink:0;color:var(--g400);}
+.srch input{flex:1;background:transparent;font-size:14px;color:var(--g800);min-width:0;}
+.srch input::placeholder{color:var(--g400);}
+.nav{width:33px;height:33px;border-radius:50%;background:var(--pr);
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+  font-size:13px;color:#fff;flex-shrink:0;cursor:pointer;}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--wh);
+  border-top:1px solid var(--g200);height:var(--bh);display:flex;
+  align-items:center;padding:0 3px;box-shadow:0 -3px 16px rgba(0,0,0,.05);}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;padding:5px 2px;cursor:pointer;position:relative;}
+.niw{width:42px;height:29px;border-radius:16px;display:flex;align-items:center;
+  justify-content:center;transition:.18s;}
+.ni svg.nf{display:none;} .ni svg.no{display:block;}
+.ni.on .niw{background:var(--prl);}
+.ni.on svg{color:var(--pr)!important;}
+.ni.on span{color:var(--pr);}
+.ni.on svg.nf{display:block;} .ni.on svg.no{display:none;}
+.ni svg{width:22px;height:22px;color:var(--g400);transition:.15s;}
+.ni span{font-size:10px;font-weight:600;color:var(--g400);transition:.15s;}
+.ni.sell{flex:none;width:56px;margin:0 1px;}
+.sc{width:49px;height:49px;background:var(--pr);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 13px rgba(255,107,53,.5);transition:.18s;}
+.ni.sell:active .sc{transform:scale(.9);}
+.nbadge{position:absolute;top:2px;right:3px;min-width:16px;height:16px;
+  background:var(--red);border-radius:99px;font-size:9px;font-weight:700;
+  color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;
+  border:2px solid var(--wh);}
+
+/* PAGES */
+.pg{display:none;padding-top:5px;animation:up .22s ease;}
+.pg.on{display:block;}
+
+/* HERO */
+.hero{margin:9px 13px;border-radius:16px;padding:17px 18px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--sec),#0F3460);}
+.hero::after{content:'';position:absolute;right:-12px;top:-12px;width:130px;height:130px;
+  background:rgba(255,107,53,.17);border-radius:50%;pointer-events:none;}
+.hero h2{font-family:var(--fd);font-size:18px;font-weight:800;color:#fff;line-height:1.25;position:relative;z-index:1;}
+.hero h2 em{color:var(--pr);font-style:normal;}
+.hero p{color:rgba(255,255,255,.5);font-size:12px;margin-top:4px;position:relative;z-index:1;}
+.hbtn{display:inline-flex;align-items:center;gap:5px;margin-top:11px;
+  padding:8px 15px;background:var(--pr);border-radius:8px;
+  font-size:12px;font-weight:700;color:#fff;position:relative;z-index:1;transition:.2s;}
+.hbtn:hover{background:var(--prd);}
+
+/* SECTION TITLE */
+.stitle{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--g800);padding:13px 13px 7px;}
+
+/* CATS */
+.cats{display:flex;gap:8px;overflow-x:auto;padding:0 13px 7px;scrollbar-width:none;}
+.cats::-webkit-scrollbar{display:none;}
+.cat{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 13px;
+  background:var(--wh);border-radius:13px;border:1.5px solid var(--g200);
+  flex-shrink:0;cursor:pointer;transition:.2s;min-width:64px;}
+.cat:hover,.cat.on{border-color:var(--pr);background:var(--prl);}
+.cat .ci{font-size:20px;} .cat .cl{font-size:10px;font-weight:600;color:var(--g600);white-space:nowrap;}
+.cat.on .cl{color:var(--pr);}
+
+/* FILTERS */
+.fbar{display:flex;gap:6px;padding:0 13px 5px;overflow-x:auto;scrollbar-width:none;}
+.fbar::-webkit-scrollbar{display:none;}
+.fc{display:flex;align-items:center;gap:4px;padding:6px 12px;background:var(--wh);
+  border:1.5px solid var(--g200);border-radius:99px;font-size:11px;font-weight:600;
+  color:var(--g600);flex-shrink:0;cursor:pointer;transition:.2s;}
+.fc.on{background:var(--pr);border-color:var(--pr);color:#fff;}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:2px 13px 13px;}
+.card{background:var(--wh);border-radius:13px;overflow:hidden;
+  box-shadow:0 2px 9px rgba(0,0,0,.06);cursor:pointer;transition:.16s;position:relative;}
+.card:active{transform:scale(.97);}
+.cimg{width:100%;aspect-ratio:1;object-fit:cover;background:var(--g100);}
+.cph{width:100%;aspect-ratio:1;background:var(--g100);display:flex;align-items:center;
+  justify-content:center;font-size:36px;}
+.cbody{padding:8px 9px 9px;}
+.ctitle{font-size:12px;font-weight:600;color:var(--g800);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cprice{font-family:var(--fd);font-size:14px;font-weight:800;color:var(--pr);margin-top:2px;}
+.cprice .mrp{font-size:10px;font-weight:400;color:var(--g400);text-decoration:line-through;margin-left:3px;}
+.cfoot{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+.ctime{font-size:10px;color:var(--g400);}
+.cfav{position:absolute;top:6px;right:6px;width:28px;height:28px;
+  background:rgba(255,255,255,.88);border-radius:50%;display:flex;align-items:center;
+  justify-content:center;transition:.2s;backdrop-filter:blur(3px);}
+.cfav svg{width:14px;height:14px;color:var(--g400);transition:.14s;}
+.cfav.on svg{color:var(--red);}
+
+/* CONDITION BADGES */
+.cb{display:inline-flex;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;}
+.cn{background:#d1fae5;color:#059669;} .cg{background:#dbeafe;color:#2563eb;}
+.cf{background:#fef3c7;color:#d97706;} .cw{background:#fee2e2;color:#dc2626;}
+
+/* EMPTY */
+.empty{text-align:center;padding:42px 18px;color:var(--g400);}
+.empty .ei{font-size:50px;margin-bottom:9px;}
+.empty h3{font-size:16px;font-weight:700;color:var(--g600);margin-bottom:4px;}
+.empty p{font-size:13px;line-height:1.5;}
+
+/* PRODUCT MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.54);z-index:200;
+  display:none;align-items:flex-end;justify-content:center;}
+.mbg.on{display:flex;}
+.msh{background:var(--wh);border-radius:22px 22px 0 0;width:100%;max-width:480px;
+  max-height:92vh;overflow-y:auto;position:relative;animation:su .25s ease;}
+/* Sticky top bar holds the handle + close btn so they never scroll away */
+.msticky{position:sticky;top:0;z-index:5;background:var(--wh);
+  display:flex;align-items:center;justify-content:center;
+  padding:10px 14px 6px;border-bottom:1px solid transparent;}
+.mhandle{width:35px;height:4px;background:var(--g200);border-radius:99px;flex:1;max-width:35px;}
+.mcbtn{width:30px;height:30px;background:var(--g100);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.mcbtn svg{width:13px;height:13px;color:var(--g600);}
+.mimg{width:100%;aspect-ratio:1;object-fit:cover;background:var(--g100);}
+.mph{width:100%;aspect-ratio:1;background:var(--g100);display:flex;align-items:center;
+  justify-content:center;font-size:68px;}
+.mbody{padding:16px;}
+.mtitle{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--g800);}
+.mpr{display:flex;align-items:center;gap:9px;margin-top:6px;flex-wrap:wrap;}
+.mprice{font-family:var(--fd);font-size:22px;font-weight:800;color:var(--pr);}
+.morig{font-size:13px;color:var(--g400);text-decoration:line-through;}
+.mdisc{font-size:11px;font-weight:700;background:var(--accl);color:var(--acc);
+  padding:3px 8px;border-radius:99px;}
+.mtags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.mtag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;
+  border:1.5px solid var(--g200);color:var(--g600);}
+.mdesc{font-size:13px;line-height:1.7;color:var(--g600);margin-top:11px;}
+.msell{display:flex;align-items:center;gap:10px;margin-top:16px;
+  padding:12px;background:var(--g100);border-radius:12px;}
+.sav{width:40px;height:40px;border-radius:50%;background:var(--pr);
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+  font-size:15px;color:#fff;flex-shrink:0;}
+.si{flex:1;min-width:0;}
+.sn{font-weight:700;font-size:13px;color:var(--g800);}
+.sc2{font-size:11px;color:var(--g400);margin-top:1px;}
+.sph{font-size:11px;color:var(--g400);margin-top:2px;}
+.srat{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--yel);}
+.macts{display:flex;gap:8px;margin-top:13px;}
+.bcht{flex:1;padding:13px;background:var(--sec);border-radius:12px;font-size:13px;font-weight:700;
+  color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;}
+.bcht:hover{background:#2a2a44;}
+.bbuy{flex:2;padding:13px;background:var(--pr);border-radius:12px;font-size:13px;font-weight:700;
+  color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;
+  box-shadow:0 3px 12px rgba(255,107,53,.4);}
+.bbuy:hover{background:var(--prd);}
+.mextra{display:flex;gap:7px;margin-top:8px;padding-bottom:2px;}
+.bsave{flex:none;padding:9px 14px;border-radius:10px;background:var(--g100);
+  font-size:12px;font-weight:600;color:var(--g600);display:flex;align-items:center;gap:5px;transition:.2s;}
+.bsave.on{color:var(--red);}
+.bsave svg{width:14px;height:14px;}
+.bshr{flex:1;padding:9px;border-radius:10px;background:var(--g100);font-size:12px;
+  font-weight:600;color:var(--g600);display:flex;align-items:center;justify-content:center;gap:5px;}
+.bdel{flex:1;padding:13px;background:#fee2e2;border-radius:12px;font-size:13px;font-weight:700;
+  color:var(--red);display:flex;align-items:center;justify-content:center;gap:6px;}
+.bsold{flex:2;padding:13px;background:#d1fae5;border-radius:12px;font-size:13px;font-weight:700;
+  color:#059669;display:flex;align-items:center;justify-content:center;gap:6px;}
+
+/* SELL PAGE */
+.phdr{padding:13px 13px 1px;display:flex;align-items:center;gap:9px;}
+.phdr h2{font-family:var(--fd);font-size:18px;font-weight:800;}
+.bbk{width:32px;height:32px;border-radius:50%;background:var(--g100);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.bbk svg{width:15px;height:15px;color:var(--g600);}
+.sform{padding:0 13px 22px;}
+.sfg{margin-bottom:16px;}
+.sfl{font-size:12px;font-weight:700;color:var(--g600);margin-bottom:6px;
+  display:flex;align-items:center;gap:4px;letter-spacing:.2px;}
+.sfl .req{color:var(--red);margin-left:1px;}
+.sfi{width:100%;padding:11px 14px;background:var(--wh);border:1.5px solid var(--g200);
+  border-radius:12px;font-size:14px;color:var(--g800);transition:.2s;}
+.sfi:focus{border-color:var(--pr);}
+.sfi::placeholder{color:var(--g400);}
+textarea.sfi{resize:none;min-height:88px;line-height:1.65;}
+select.sfi{appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239CA3AF'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;background-size:19px;}
+.pgr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.upz{border:2px dashed var(--g200);border-radius:12px;padding:22px;
+  text-align:center;cursor:pointer;transition:.2s;background:var(--wh);}
+.upz:hover,.upz.drag{border-color:var(--pr);background:var(--prl);}
+.upz svg{width:34px;height:34px;color:var(--pr);margin:0 auto 8px;}
+.upz p{font-size:13px;font-weight:600;color:var(--g600);}
+.upz small{font-size:11px;color:var(--g400);}
+.pvg{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.pvi{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;
+  border:1.5px solid var(--g200);}
+.pvi img{width:100%;height:100%;object-fit:cover;}
+.pvrm{position:absolute;top:2px;right:2px;width:19px;height:19px;
+  background:rgba(0,0,0,.6);border-radius:50%;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;}
+.pvrm svg{width:9px;height:9px;color:#fff;}
+
+.bpost{width:100%;padding:14px;background:var(--pr);border-radius:13px;font-size:14px;
+  font-weight:800;color:#fff;margin-top:5px;transition:.2s;
+  box-shadow:0 4px 16px rgba(255,107,53,.4);display:flex;align-items:center;
+  justify-content:center;gap:7px;}
+.bpost:hover{background:var(--prd);transform:translateY(-1px);}
+.bpost:disabled{background:var(--g200);color:var(--g400);box-shadow:none;transform:none;cursor:default;}
+
+/* PROFILE */
+.prh{margin:9px 13px;background:linear-gradient(135deg,var(--sec),#0F3460);
+  border-radius:16px;padding:20px;}
+.prar{display:flex;align-items:center;gap:13px;}
+.prav{width:62px;height:62px;border-radius:50%;background:var(--pr);
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;
+  color:#fff;border:3px solid rgba(255,255,255,.2);overflow:hidden;flex-shrink:0;}
+.prname{font-family:var(--fd);font-size:17px;font-weight:800;color:#fff;}
+.prsub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;}
+.prstats{display:flex;margin-top:14px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.pst{flex:1;text-align:center;padding:10px 5px;border-right:1px solid rgba(255,255,255,.08);}
+.pst:last-child{border-right:none;}
+.pst .pv{font-family:var(--fd);font-size:18px;font-weight:800;color:#fff;}
+.pst .pl{font-size:10px;color:rgba(255,255,255,.36);margin-top:1px;}
+.bedit{margin-top:10px;padding:7px 15px;background:rgba(255,255,255,.11);
+  border-radius:8px;font-size:12px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.16);}
+.tbar{display:flex;border-bottom:2px solid var(--g200);margin:0 13px;}
+.tbtn{flex:1;padding:10px;font-size:13px;font-weight:700;color:var(--g400);
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;}
+.tbtn.on{color:var(--pr);border-bottom-color:var(--pr);}
+.psec{padding:0 13px 13px;}
+.mygrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;padding-top:11px;}
+.blout{width:calc(100% - 26px);margin:4px 13px 14px;padding:12px;background:var(--g100);
+  border-radius:12px;font-size:14px;font-weight:700;color:var(--red);
+  display:flex;align-items:center;justify-content:center;gap:7px;}
+.blout:hover{background:#fee2e2;}
+
+/* MESSAGES */
+.clist{padding:0 13px;}
+.ci{display:flex;align-items:center;gap:10px;padding:12px 0;
+  border-bottom:1px solid var(--g100);cursor:pointer;}
+.cav{width:44px;height:44px;border-radius:50%;background:var(--pr);
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+  font-size:16px;color:#fff;flex-shrink:0;}
+.cinf{flex:1;min-width:0;}
+.cname{font-weight:700;font-size:13px;color:var(--g800);}
+.cprev{font-size:12px;color:var(--g400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+.cmeta{text-align:right;flex-shrink:0;}
+.ctime{font-size:10px;color:var(--g400);}
+.cbadge{margin-top:3px;min-width:16px;height:16px;background:var(--pr);
+  border-radius:99px;font-size:9px;font-weight:700;color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;padding:0 4px;}
+
+/* EDIT PROFILE MODAL */
+.embg{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:300;
+  display:none;align-items:flex-end;justify-content:center;}
+.embg.on{display:flex;}
+.emsh{background:var(--wh);border-radius:20px 20px 0 0;width:100%;max-width:480px;
+  padding:18px;animation:su .22s ease;}
+.emsh h3{font-family:var(--fd);font-size:16px;font-weight:800;margin-bottom:16px;}
+.emfg{margin-bottom:12px;}
+.eml{font-size:12px;font-weight:700;color:var(--g600);margin-bottom:5px;display:block;}
+.emi{width:100%;padding:11px 13px;background:var(--g100);border:1.5px solid var(--g200);
+  border-radius:11px;font-size:14px;color:var(--g800);transition:.2s;}
+.emi:focus{border-color:var(--pr);background:var(--wh);}
+.emacts{display:flex;gap:8px;margin-top:5px;}
+.bcanc{flex:1;padding:12px;background:var(--g100);border-radius:11px;font-size:13px;font-weight:700;color:var(--g600);}
+.bsvp{flex:2;padding:12px;background:var(--pr);border-radius:11px;font-size:13px;font-weight:700;color:#fff;transition:.2s;}
+.bsvp:hover{background:var(--prd);}
+
+/* TOAST */
+.toast{position:fixed;top:68px;left:50%;transform:translateX(-50%);
+  background:var(--g800);color:#fff;padding:10px 18px;border-radius:10px;
+  font-size:13px;font-weight:600;z-index:400;display:none;
+  box-shadow:var(--sh);white-space:nowrap;max-width:calc(100vw - 32px);
+  text-align:center;animation:up .22s ease;}
+
+/* RESPONSIVE */
+@media(min-width:460px){
+  .grid,.mygrid{grid-template-columns:repeat(3,1fr);}
+  .pgr{grid-template-columns:repeat(3,1fr);}
+}
+@media(min-width:480px){
+  .mbg,.embg{align-items:center;}
+  .msh,.emsh{border-radius:20px;}
+}
+@media(min-width:860px){
+  body{max-width:460px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,.08);}
+  .bnav,.tnav{max-width:460px;left:50%;transform:translateX(-50%);}
+  .mbg,.embg{max-width:460px;left:50%;transform:translateX(-50%);}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ AUTH SCREEN ═══ -->
+<div id="auth" class="scr on">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="alogo">
+    <div class="lbox">🛒</div>
+    <h1>CampusCart</h1>
+    <p>Buy &amp; Sell on Campus — Fast &amp; Free</p>
+  </div>
+  <div class="acard">
+    <div class="atabs">
+      <button class="atab on" onclick="switchTab('login')">Login</button>
+      <button class="atab" onclick="switchTab('reg')">Register</button>
+    </div>
+    <div id="aerr" class="aerr"></div>
+    <div id="aok"  class="aok"></div>
+
+    <!-- LOGIN FORM -->
+    <div id="lf">
+      <div class="fg">
+        <label class="fl">Email</label>
+        <input class="fi" type="email" id="le" placeholder="your@email.com" autocomplete="email"/>
+      </div>
+      <div class="fg">
+        <label class="fl">Password</label>
+        <div class="pw-w">
+          <input class="fi" type="password" id="lp" placeholder="••••••••" autocomplete="current-password" style="padding-right:40px;"/>
+          <div class="pw-t" onclick="togglePw('lp',this)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        </div>
+      </div>
+      <button class="btn-a" onclick="doLogin()">Login to CampusCart</button>
+      <div class="adiv">— or —</div>
+      <button class="btn-demo" onclick="doDemo()">🚀 Try Demo (no sign-up needed)</button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="rf" style="display:none;">
+      <div class="fg">
+        <label class="fl">Full Name</label>
+        <input class="fi" type="text" id="rn" placeholder="Your full name" autocomplete="name"/>
+      </div>
+      <div class="fg">
+        <label class="fl">Email</label>
+        <input class="fi" type="email" id="re" placeholder="your@college.edu" autocomplete="email"/>
+      </div>
+      <div class="fg">
+        <label class="fl">College / University</label>
+        <input class="fi" type="text" id="rc" placeholder="e.g. IIT Bombay, Delhi University"/>
+      </div>
+      <div class="fg">
+        <label class="fl">Password</label>
+        <div class="pw-w">
+          <input class="fi" type="password" id="rp" placeholder="min. 6 characters" autocomplete="new-password" style="padding-right:40px;"/>
+          <div class="pw-t" onclick="togglePw('rp',this)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        </div>
+      </div>
+      <button class="btn-a" onclick="doReg()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP SCREEN ═══ -->
+<div id="app" class="scr">
+
+  <!-- TOP NAV -->
+  <nav class="tnav">
+    <div class="tlogo">Campus<span>Cart</span></div>
+    <div class="srch">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="search" id="ms" placeholder="Search books, gadgets, cycles…" oninput="onSrch(this.value)" autocomplete="off"/>
+    </div>
+    <div class="nav" id="nav-av" onclick="goTo('profile')"></div>
+  </nav>
+
+  <!-- HOME -->
+  <div id="home-pg" class="pg on">
+    <div class="hero">
+      <h2>Campus deals,<br/><em>zero shipping fee.</em></h2>
+      <p>Buy &amp; sell within your campus community</p>
+      <button class="hbtn" onclick="focusSrch()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Browse Now
+      </button>
+    </div>
+    <div class="stitle">Categories</div>
+    <div class="cats" id="cats-row"></div>
+    <div class="fbar">
+      <div class="fc on" onclick="setSort('newest',this)">🕐 Newest</div>
+      <div class="fc" onclick="setSort('price-asc',this)">↑ Price Low</div>
+      <div class="fc" onclick="setSort('price-desc',this)">↓ Price High</div>
+      <div class="fc" onclick="setSort('popular',this)">🔥 Popular</div>
+    </div>
+    <div class="stitle" id="lhead">All Listings</div>
+    <div class="grid" id="lgrid"></div>
+    <div id="hempty" class="empty" style="display:none;">
+      <div class="ei">🔍</div><h3>Nothing found</h3><p>Try a different search or category</p>
+    </div>
+  </div>
+
+  <!-- SAVED -->
+  <div id="wishlist-pg" class="pg">
+    <div class="stitle">❤️ Saved Items</div>
+    <div class="grid" id="wgrid"></div>
+    <div id="wempty" class="empty" style="display:none;">
+      <div class="ei">💔</div><h3>No saved items yet</h3><p>Tap ♡ on any listing to save it here</p>
+    </div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div id="messages-pg" class="pg">
+    <div class="stitle">💬 Messages</div>
+    <div class="clist" id="clist"></div>
+    <div id="mempty" class="empty" style="display:none;">
+      <div class="ei">📭</div><h3>No messages yet</h3><p>Contact a seller and the chat appears here</p>
+    </div>
+  </div>
+
+  <!-- SELL -->
+  <div id="sell-pg" class="pg">
+    <div class="phdr">
+      <div class="bbk" onclick="goTo('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </div>
+      <h2>Post a Listing</h2>
+    </div>
+    <div class="sform">
+      <div class="sfg">
+        <div class="sfl">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          Photos<span class="req">*</span>
+        </div>
+        <div class="upz" id="upz" onclick="document.getElementById('fimg').click()"
+             ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>Tap to upload photos</p>
+          <small>JPG, PNG · Max 5 photos · 5MB each</small>
+        </div>
+        <input type="file" id="fimg" accept="image/*" multiple style="display:none" onchange="onFSel(event)"/>
+        <div class="pvg" id="pvg"></div>
+      </div>
+      <div class="sfg">
+        <div class="sfl">Title<span class="req">*</span></div>
+        <input type="text" class="sfi" id="st" placeholder="e.g. Engineering Maths Textbook Sem 3" maxlength="80"/>
+      </div>
+      <div class="sfg">
+        <div class="sfl">Category<span class="req">*</span></div>
+        <select class="sfi" id="sc">
+          <option value="">— Select category —</option>
+          <option value="books">📚 Books &amp; Notes</option>
+          <option value="electronics">💻 Electronics &amp; Gadgets</option>
+          <option value="hostel">🛏️ Hostel &amp; Room</option>
+          <option value="clothing">👕 Clothing &amp; Fashion</option>
+          <option value="cycles">🚲 Cycles &amp; Transport</option>
+          <option value="sports">⚽ Sports &amp; Fitness</option>
+          <option value="stationery">✏️ Stationery</option>
+          <option value="food">🍕 Food &amp; Mess</option>
+          <option value="lab">🔬 Lab Equipment</option>
+          <option value="other">📦 Other</option>
+        </select>
+      </div>
+      <div class="sfg">
+        <div class="sfl">Condition<span class="req">*</span></div>
+        <select class="sfi" id="sco">
+          <option value="">— Select condition —</option>
+          <option value="new">🟢 Brand New</option>
+          <option value="good">🔵 Like New / Good</option>
+          <option value="fair">🟡 Fair / Used</option>
+          <option value="worn">🔴 Heavily Used</option>
+        </select>
+      </div>
+      <div class="pgr">
+        <div class="sfg">
+          <div class="sfl">Price ₹<span class="req">*</span></div>
+          <input type="number" class="sfi" id="sp" placeholder="0" min="0" inputmode="numeric"/>
+        </div>
+        <div class="sfg">
+          <div class="sfl">Original MRP ₹</div>
+          <input type="number" class="sfi" id="sm" placeholder="Optional" min="0" inputmode="numeric"/>
+        </div>
+      </div>
+      <div class="sfg">
+        <div class="sfl">Description<span class="req">*</span></div>
+        <textarea class="sfi" id="sd" placeholder="Age, condition details, reason for selling…" rows="4"></textarea>
+      </div>
+      <div class="sfg">
+        <div class="sfl">Pickup Location</div>
+        <input type="text" class="sfi" id="sl" placeholder="e.g. Hostel Block C, Library Gate"/>
+      </div>
+      <button class="bpost" id="pbtn" onclick="submitListing()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Post Listing
+      </button>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="profile-pg" class="pg">
+    <div class="prh">
+      <div class="prar">
+        <div class="prav" id="prav"></div>
+        <div>
+          <div class="prname" id="prname"></div>
+          <div class="prsub" id="prcol"></div>
+          <button class="bedit" onclick="openEdit()">✏️ Edit Profile</button>
+        </div>
+      </div>
+      <div class="prstats">
+        <div class="pst"><div class="pv" id="st-a">0</div><div class="pl">Active</div></div>
+        <div class="pst"><div class="pv" id="st-s">0</div><div class="pl">Sold</div></div>
+        <div class="pst"><div class="pv" id="st-w">0</div><div class="pl">Saved</div></div>
+      </div>
+    </div>
+    <div class="tbar">
+      <button class="tbtn on" onclick="sPTab('active',this)">My Listings</button>
+      <button class="tbtn" onclick="sPTab('sold',this)">Sold</button>
+    </div>
+    <div class="psec">
+      <div class="mygrid" id="mygrid"></div>
+      <div id="myempty" class="empty" style="display:none;">
+        <div class="ei">📦</div><h3>No listings yet</h3><p>Tap + to post your first item</p>
+      </div>
+    </div>
+    <button class="blout" onclick="doLogout()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout
+    </button>
+  </div>
+
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="mbg" id="pmod" onclick="onMBG(event)">
+  <div class="msh" id="msh">
+    <div class="msticky">
+      <div class="mhandle"></div>
+      <div class="mcbtn" onclick="closeMod()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+    </div>
+    <div id="mbody"></div>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div class="embg" id="emmod" onclick="onEMBG(event)">
+  <div class="emsh">
+    <h3>✏️ Edit Profile</h3>
+    <div class="emfg"><label class="eml">Full Name</label><input class="emi" type="text" id="emn" placeholder="Your name"/></div>
+    <div class="emfg"><label class="eml">College / University</label><input class="emi" type="text" id="emc" placeholder="Your college"/></div>
+    <div class="emfg"><label class="eml">Phone (shown to buyers)</label><input class="emi" type="tel" id="emp" placeholder="e.g. 98XXXXXXXX" inputmode="numeric"/></div>
+    <div class="emacts">
+      <button class="bcanc" onclick="closeEdit()">Cancel</button>
+      <button class="bsvp" onclick="saveProf()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav" id="bnav" style="display:none;">
+  <div class="ni on" id="ni-home" onclick="goTo('home')">
+    <div class="niw">
+      <svg class="no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H15v-5h-6v5H4a1 1 0 01-1-1V9.5z" stroke-linejoin="round"/></svg>
+      <svg class="nf" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H15v-5h-6v5H4a1 1 0 01-1-1V9.5z"/></svg>
+    </div>
+    <span>Home</span>
+  </div>
+  <div class="ni" id="ni-wishlist" onclick="goTo('wishlist')">
+    <div class="niw">
+      <svg class="no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke-linejoin="round"/></svg>
+      <svg class="nf" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      <div class="nbadge" id="wbadge" style="display:none;"></div>
+    </div>
+    <span>Saved</span>
+  </div>
+  <div class="ni sell" onclick="goTo('sell')">
+    <div class="sc">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+  <div class="ni" id="ni-messages" onclick="goTo('messages')">
+    <div class="niw">
+      <svg class="no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linejoin="round"/></svg>
+      <svg class="nf" viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <div class="nbadge" id="mbadge" style="display:none;"></div>
+    </div>
+    <span>Messages</span>
+  </div>
+  <div class="ni" id="ni-profile" onclick="goTo('profile')">
+    <div class="niw">
+      <svg class="no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <svg class="nf" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM3 21a9 9 0 0118 0H3z"/></svg>
+    </div>
+    <span>Profile</span>
+  </div>
+</nav>
+
+<script>
+/* ─────────────────────────────────────────────────────────
+   UTILS
+───────────────────────────────────────────────────────── */
+const esc = s => s==null?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;');
+const uid = () => Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+function timeAgo(iso){
+  const d = Math.max(0, Date.now()-new Date(iso).getTime());
+  const m=Math.floor(d/6e4);
+  if(m<1) return 'just now';
+  if(m<60) return m+'m ago';
+  const h=Math.floor(m/60);
+  if(h<24) return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+function toast(msg,ms=2800){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none',ms);
+}
+
+/* ─────────────────────────────────────────────────────────
+   DATABASE  (localStorage-backed, in-memory during session)
+───────────────────────────────────────────────────────── */
+const DB = (()=>{
+  let U=JSON.parse(localStorage.getItem('cc3_u')||'[]');
+  let L=JSON.parse(localStorage.getItem('cc3_l')||'[]');
+  let W=JSON.parse(localStorage.getItem('cc3_w')||'[]');
+  let M=JSON.parse(localStorage.getItem('cc3_m')||'[]');
+  let S=JSON.parse(localStorage.getItem('cc3_s')||'null');
+  const save=()=>{
+    try{
+      localStorage.setItem('cc3_u',JSON.stringify(U));
+      localStorage.setItem('cc3_l',JSON.stringify(L));
+      localStorage.setItem('cc3_w',JSON.stringify(W));
+      localStorage.setItem('cc3_m',JSON.stringify(M));
+      localStorage.setItem('cc3_s',JSON.stringify(S));
+    }catch(e){ console.warn('Storage full'); }
+  };
+
+  const auth={
+    reg(name,email,pass,college){
+      name=name.trim(); email=email.trim().toLowerCase(); college=(college||'').trim();
+      if(!name||!email||!pass) return {error:'Please fill all fields'};
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return {error:'Enter a valid email'};
+      if(pass.length<6) return {error:'Password must be at least 6 characters'};
+      if(U.find(u=>u.email===email)) return {error:'Email already registered'};
+      const u={id:uid(),name,email,pass,college:college||'Student',phone:'',
+        joined:new Date().toISOString(),rating:4.8};
+      U.push(u); S={uid:u.id}; save(); return {user:u};
+    },
+    login(email,pass){
+      email=(email||'').trim().toLowerCase(); pass=pass||'';
+      const u=U.find(u=>u.email===email&&u.pass===pass);
+      if(!u) return {error:'Wrong email or password'};
+      S={uid:u.id}; save(); return {user:u};
+    },
+    logout(){ S=null; save(); },
+    me(){ return S?U.find(u=>u.id===S.uid)||null:null; },
+    update(fields){
+      const u=auth.me(); if(!u) return;
+      Object.assign(u,fields);
+      U=U.map(x=>x.id===u.id?u:x); save();
+    }
+  };
+
+  const lst={
+    add(data){
+      const u=auth.me(); if(!u) return {error:'Not logged in'};
+      const l={id:uid(),...data,sid:u.id,sname:u.name,scol:u.college,
+        sphone:u.phone||'',srat:u.rating,at:new Date().toISOString(),views:0,status:'active'};
+      L.unshift(l); save(); return {listing:l};
+    },
+    all({cat,q,sort}={}){
+      let ls=L.filter(l=>l.status==='active');
+      if(cat&&cat!=='all') ls=ls.filter(l=>l.cat===cat);
+      if(q){ const lq=q.toLowerCase();
+        ls=ls.filter(l=>[l.title,l.desc,l.cat,l.loc].some(f=>(f||'').toLowerCase().includes(lq)));
+      }
+      if(sort==='price-asc') ls.sort((a,b)=>a.price-b.price);
+      else if(sort==='price-desc') ls.sort((a,b)=>b.price-a.price);
+      else if(sort==='popular') ls.sort((a,b)=>b.views-a.views);
+      else ls.sort((a,b)=>new Date(b.at)-new Date(a.at));
+      return ls;
+    },
+    byId(id){ return L.find(l=>l.id===id); },
+    byUser(uid){ return L.filter(l=>l.sid===uid); },
+    sold(uid){ return L.filter(l=>l.sid===uid&&l.status==='sold'); },
+    markSold(id){ const l=L.find(l=>l.id===id); if(l){l.status='sold';save();} },
+    del(id){ L=L.filter(l=>l.id!==id); save(); },
+    view(id){ const l=L.find(l=>l.id===id); if(l){l.views++;save();} }
+  };
+
+  const wish={
+    toggle(lid){
+      const u=auth.me(); if(!u) return false;
+      const k=`${u.id}:${lid}`, i=W.indexOf(k);
+      if(i>-1){W.splice(i,1);save();return false;}
+      W.push(k);save();return true;
+    },
+    has(lid){ const u=auth.me(); return u?W.includes(`${u.id}:${lid}`):false; },
+    mine(){ const u=auth.me(); if(!u) return [];
+      const ids=W.filter(k=>k.startsWith(u.id+':')).map(k=>k.split(':')[1]);
+      return L.filter(l=>ids.includes(l.id));
+    }
+  };
+
+  const msg={
+    send(toId,lid,text){
+      const u=auth.me(); if(!u) return;
+      const m={id:uid(),fid:u.id,fname:u.name,tid:toId,lid,text,at:new Date().toISOString(),read:false};
+      M.push(m);save();return m;
+    },
+    inbox(){ const u=auth.me(); if(!u) return [];
+      return M.filter(m=>m.tid===u.id||m.fid===u.id);
+    },
+    markRead(otherId){ const u=auth.me(); if(!u) return;
+      M.filter(m=>m.tid===u.id&&m.fid===otherId).forEach(m=>m.read=true); save();
+    },
+    unread(){ const u=auth.me(); if(!u) return 0;
+      return M.filter(m=>m.tid===u.id&&!m.read).length;
+    }
+  };
+
+  const seed=()=>{
+    if(!U.find(u=>u.id==='du')){
+      U.push({id:'du',name:'Arjun Sharma',email:'demo@campus.com',
+        pass:'demo123',college:'IIT Bombay',phone:'9800000000',
+        joined:'2024-08-01T00:00:00Z',rating:4.9}); save();
+    }
+    if(L.length>0) return;
+    const now=Date.now(), d=h=>new Date(now-h*36e5).toISOString();
+    const sl=[
+      {id:'l1',title:'Engineering Maths – RD Sharma Vol 1&2',cat:'books',cond:'good',
+       price:180,mrp:450,desc:'Both volumes in good condition. Some pencil marks. Perfect for Sem 1–2. Light spine crack on Vol 2.',
+       imgs:[],loc:'Hostel Block A',sid:'du',sname:'Arjun Sharma',scol:'IIT Bombay',sphone:'9800000000',srat:4.9,at:d(2),views:43,status:'active'},
+      {id:'l2',title:'Dell Laptop Cooling Pad – 5 Fans RGB',cat:'electronics',cond:'good',
+       price:350,mrp:799,desc:'HAVIT cooling pad, 5 fans, RGB. Works perfectly. Selling because I got a new desk stand.',
+       imgs:[],loc:'Hostel B-204',sid:'du',sname:'Arjun Sharma',scol:'IIT Bombay',sphone:'9800000000',srat:4.9,at:d(7),views:78,status:'active'},
+      {id:'l3',title:'Casio fx-991ES PLUS Calculator',cat:'stationery',cond:'good',
+       price:220,mrp:500,desc:'Works perfectly. No scratches. Selling because I upgraded to a graphing calculator.',
+       imgs:[],loc:'Main Gate',sid:'du',sname:'Arjun Sharma',scol:'IIT Bombay',sphone:'9800000000',srat:4.9,at:d(14),views:55,status:'active'},
+      {id:'l4',title:'Hero Sprint 26T Mountain Bicycle',cat:'cycles',cond:'fair',
+       price:1800,mrp:4500,desc:'3 years old, rides great. Tyres recently replaced. Minor rust on chain. Perfect campus commute bike.',
+       imgs:[],loc:'Cycle Stand near Library',sid:'du',sname:'Arjun Sharma',scol:'IIT Bombay',sphone:'9800000000',srat:4.9,at:d(28),views:120,status:'active'},
+      {id:'l5',title:'Nilkamal Study Chair (Height Adjustable)',cat:'hostel',cond:'good',
+       price:600,mrp:1200,desc:'Padded, height-adjustable chair. Used 2 semesters. Light wear on armrests only.',
+       imgs:[],loc:'Hostel D-Block',sid:'du',sname:'Arjun Sharma',scol:'IIT Bombay',sphone:'9800000000',srat:4.9,at:d(48),views:34,status:'active'},
+      {id:'l6',title:'CLRS – Introduction to Algorithms 4th Ed',cat:'books',cond:'fair',
+       price:350,mrp:1200,desc:'Hardcover 4th edition. Some highlights and notes. Essential for any CS student.',
+       imgs:[],loc:'CS Dept Reading Room',sid:'du',sname:'Arjun Sharma',scol:'IIT Bombay',sphone:'9800000000',srat:4.9,at:d(70),views:67,status:'active'},
+    ];
+    L.push(...sl); save();
+  };
+
+  return {auth,lst,wish,msg,seed};
+})();
+
+/* ─────────────────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────────────────── */
+let ACT='all', SORT='newest', Q='', IMGS=[], PTAB='active', MOD_ID=null;
+
+const CATS=[
+  {id:'all',ic:'🏪',lb:'All'},{id:'books',ic:'📚',lb:'Books'},
+  {id:'electronics',ic:'💻',lb:'Electronics'},{id:'hostel',ic:'🛏️',lb:'Hostel'},
+  {id:'clothing',ic:'👕',lb:'Clothing'},{id:'cycles',ic:'🚲',lb:'Cycles'},
+  {id:'sports',ic:'⚽',lb:'Sports'},{id:'stationery',ic:'✏️',lb:'Stationery'},
+  {id:'food',ic:'🍕',lb:'Food'},{id:'lab',ic:'🔬',lb:'Lab'},{id:'other',ic:'📦',lb:'Other'},
+];
+const CIC=Object.fromEntries(CATS.map(c=>[c.id,c.ic]));
+const CLBL={new:'New',good:'Good',fair:'Fair',worn:'Worn'};
+const CCS={new:'cn',good:'cg',fair:'cf',worn:'cw'};
+
+/* ─────────────────────────────────────────────────────────
+   AUTH
+───────────────────────────────────────────────────────── */
+function switchTab(t){
+  document.querySelectorAll('.atab').forEach((el,i)=>el.classList.toggle('on',t==='login'?i===0:i===1));
+  document.getElementById('lf').style.display=t==='login'?'block':'none';
+  document.getElementById('rf').style.display=t==='reg'?'block':'none';
+  clearAMsg();
+}
+function showAErr(m){ const e=document.getElementById('aerr');e.textContent=m;e.style.display='block';document.getElementById('aok').style.display='none'; }
+function showAOk(m){  const e=document.getElementById('aok'); e.textContent=m;e.style.display='block';document.getElementById('aerr').style.display='none'; }
+function clearAMsg(){ document.getElementById('aerr').style.display='none'; document.getElementById('aok').style.display='none'; }
+function togglePw(id,btn){
+  const i=document.getElementById(id); i.type=i.type==='password'?'text':'password';
+  btn.style.opacity=i.type==='text'?'1':'';
+}
+function doLogin(){
+  clearAMsg(); DB.seed();
+  const e=document.getElementById('le').value.trim();
+  const p=document.getElementById('lp').value;
+  if(!e||!p) return showAErr('Please enter your email and password');
+  const r=DB.auth.login(e,p);
+  if(r.error) return showAErr(r.error);
+  launchApp(r.user);
+}
+function doDemo(){
+  clearAMsg(); DB.seed();
+  const r=DB.auth.login('demo@campus.com','demo123');
+  if(r.error) return showAErr('Demo failed. Please refresh the page.');
+  launchApp(r.user);
+}
+function doReg(){
+  clearAMsg();
+  const r=DB.auth.reg(
+    document.getElementById('rn').value,
+    document.getElementById('re').value,
+    document.getElementById('rp').value,
+    document.getElementById('rc').value
+  );
+  if(r.error) return showAErr(r.error);
+  showAOk('Account created! Welcome to CampusCart 🎉');
+  setTimeout(()=>launchApp(r.user),900);
+}
+function doLogout(){
+  if(!confirm('Log out of CampusCart?')) return;
+  DB.auth.logout();
+  ACT='all';SORT='newest';Q='';PTAB='active';IMGS=[];
+  document.getElementById('ms').value='';
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById('home-pg').classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('ni-home').classList.add('on');
+  const app=document.getElementById('app'), au=document.getElementById('auth');
+  app.classList.remove('on'); app.style.display='none';
+  document.getElementById('bnav').style.display='none';
+  au.classList.add('on'); au.style.removeProperty('display');
+  switchTab('login');
+}
+function launchApp(user){
+  const au=document.getElementById('auth'), app=document.getElementById('app');
+  au.classList.remove('on'); au.style.display='none';
+  app.classList.add('on'); app.style.display='block';
+  document.getElementById('bnav').style.display='flex';
+  initApp();
+}
+
+/* ─────────────────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────────────────── */
+function initApp(){
+  DB.seed();
+  updateNavAv();
+  renderCats();
+  renderListings();
+  updateBadges();
+}
+function updateNavAv(){
+  const u=DB.auth.me(); if(!u) return;
+  document.getElementById('nav-av').textContent=u.name.charAt(0).toUpperCase();
+}
+
+/* ─────────────────────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────────────────────── */
+function goTo(pg){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById(pg+'-pg').classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  const ni=document.getElementById('ni-'+pg); if(ni) ni.classList.add('on');
+  if(pg==='home')     renderListings();
+  if(pg==='wishlist') renderWishlist();
+  if(pg==='profile')  renderProfile();
+  if(pg==='messages') renderMessages();
+  if(pg==='sell')     resetSell();
+  window.scrollTo(0,0);
+}
+
+/* ─────────────────────────────────────────────────────────
+   CATEGORIES
+───────────────────────────────────────────────────────── */
+function renderCats(){
+  document.getElementById('cats-row').innerHTML=CATS.map(c=>`
+    <div class="cat${c.id===ACT?' on':''}" onclick="selCat('${c.id}')">
+      <span class="ci">${c.ic}</span><span class="cl">${c.lb}</span>
+    </div>`).join('');
+}
+function selCat(id){ ACT=id; renderCats(); renderListings(); }
+
+/* ─────────────────────────────────────────────────────────
+   LISTINGS
+───────────────────────────────────────────────────────── */
+function renderListings(){
+  const grid=document.getElementById('lgrid'), empty=document.getElementById('hempty');
+  const head=document.getElementById('lhead');
+  // Keep filter chips in sync with SORT state
+  document.querySelectorAll('.fc').forEach(c=>{
+    const s=c.getAttribute('onclick')||'';
+    const match=s.match(/setSort\('([^']+)'/);
+    c.classList.toggle('on', match&&match[1]===SORT);
+  });
+  const ls=DB.lst.all({cat:ACT,q:Q,sort:SORT});
+  if(Q) head.textContent=`Results for "${Q}"`;
+  else if(ACT!=='all'){ const c=CATS.find(c=>c.id===ACT); head.textContent=`${c.ic} ${c.lb}`; }
+  else head.textContent='All Listings';
+  if(!ls.length){ grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  grid.innerHTML=ls.map(cardHTML).join('');
+}
+
+function cardHTML(l){
+  const w=DB.wish.has(l.id);
+  const sold=l.status==='sold';
+  const img=l.imgs&&l.imgs.length
+    ? `<img class="cimg" src="${l.imgs[0]}" alt="${esc(l.title)}" loading="lazy"/>`
+    : `<div class="cph">${CIC[l.cat]||'📦'}</div>`;
+  const hrt=`<svg viewBox="0 0 24 24" fill="${w?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`;
+  return `
+  <div class="card" onclick="openMod('${l.id}')">
+    <div style="position:relative;">
+      ${img}
+      ${sold?`<div style="position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;border-radius:13px 13px 0 0;">
+        <span style="background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px;letter-spacing:.5px;">SOLD</span>
+      </div>`:''}
+    </div>
+    ${!sold?`<div class="cfav${w?' on':''}" onclick="togWish(event,'${l.id}')">${hrt}</div>`:''}
+    <div class="cbody">
+      <div class="ctitle">${esc(l.title)}</div>
+      <div class="cprice">₹${l.price.toLocaleString()}${l.mrp&&l.mrp>l.price?`<span class="mrp">₹${l.mrp.toLocaleString()}</span>`:''}</div>
+      <div class="cfoot">
+        ${l.cond !== 'fair' && l.cond !== 'good' ? `<span class="cb ${sold?'cw':''}${!sold?(CCS[l.cond]||'cg'):''}">${sold?'Sold':(CLBL[l.cond]||'Used')}</span>` : ''}
+        <span class="ctime">${timeAgo(l.at)}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function onSrch(v){ Q=v.trim(); renderListings(); }
+function focusSrch(){ document.getElementById('ms').focus(); window.scrollTo({top:85,behavior:'smooth'}); }
+function setSort(s,el){
+  SORT=s;
+  document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  renderListings();
+}
+
+/* ─────────────────────────────────────────────────────────
+   WISHLIST
+───────────────────────────────────────────────────────── */
+function togWish(e,id){
+  e.stopPropagation();
+  const added=DB.wish.toggle(id);
+  toast(added?'❤️ Saved':'🗑️ Removed from wishlist');
+  if(document.getElementById('wishlist-pg').classList.contains('on')) renderWishlist();
+  else renderListings();
+  if(MOD_ID===id) renderMod(id); // refresh modal save btn without re-incrementing views
+  updateBadges();
+}
+function renderWishlist(){
+  const g=document.getElementById('wgrid'), e=document.getElementById('wempty');
+  const ls=DB.wish.mine();
+  if(!ls.length){ g.innerHTML=''; e.style.display='block'; return; }
+  e.style.display='none'; g.innerHTML=ls.map(cardHTML).join('');
+}
+function updateBadges(){
+  const w=DB.wish.mine().length, wb=document.getElementById('wbadge');
+  wb.textContent=w; wb.style.display=w>0?'flex':'none';
+  const u=DB.msg.unread(), mb=document.getElementById('mbadge');
+  mb.textContent=u; mb.style.display=u>0?'flex':'none';
+}
+
+/* ─────────────────────────────────────────────────────────
+   PRODUCT MODAL
+───────────────────────────────────────────────────────── */
+function openMod(id){
+  DB.lst.view(id); MOD_ID=id;
+  renderMod(id);
+  document.getElementById('pmod').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function renderMod(id){
+  const l=DB.lst.byId(id); if(!l) return;
+  const u=DB.auth.me(), isOwn=u&&l.sid===u.id, w=DB.wish.has(id);
+  const disc=l.mrp&&l.mrp>l.price?Math.round((1-l.price/l.mrp)*100):0;
+  const cat=CATS.find(c=>c.id===l.cat)||{ic:'📦',lb:l.cat||'Other'};
+  const imgs=l.imgs&&l.imgs.length?l.imgs:[];
+  const imgB=imgs.length
+    ? `<div style="position:relative;">
+         <img class="mimg" id="mimg-main" src="${imgs[0]}" alt="${esc(l.title)}"/>
+         ${imgs.length>1?`<div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;">
+           ${imgs.map((_,i)=>`<div onclick="swapImg(${i})" style="width:${i===0?18:6}px;height:6px;border-radius:99px;background:${i===0?'#fff':'rgba(255,255,255,.5)'};cursor:pointer;transition:.2s;" id="mdot-${i}"></div>`).join('')}
+         </div>`:''}
+       </div>`
+    : `<div class="mph">${cat.ic}</div>`;
+  const hrt=`<svg viewBox="0 0 24 24" width="14" height="14" fill="${w?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`;
+  const sInit=(l.sname||'?').charAt(0).toUpperCase();
+  document.getElementById('mbody').innerHTML=`
+    ${imgB}
+    <div class="mbody">
+      <h2 class="mtitle">${esc(l.title)}</h2>
+      <div class="mpr">
+        <div class="mprice">₹${l.price.toLocaleString()}</div>
+        ${l.mrp&&l.mrp>l.price?`<div class="morig">₹${l.mrp.toLocaleString()}</div>`:''}
+        ${disc?`<div class="mdisc">${disc}% OFF</div>`:''}
+      </div>
+      <div class="mtags">
+        <div class="mtag">${cat.ic} ${cat.lb}</div>
+        <span class="cb ${CCS[l.cond]||'cg'}">${CLBL[l.cond]||'Used'} condition</span>
+        ${l.loc?`<div class="mtag">📍 ${esc(l.loc)}</div>`:''}
+        <div class="mtag">👁️ ${l.views} views</div>
+      </div>
+      <p class="mdesc">${esc(l.desc)}</p>
+      <div class="msell">
+        <div class="sav">${sInit}</div>
+        <div class="si">
+          <div class="sn">${esc(l.sname||'Unknown')}</div>
+          <div class="sc2">${esc(l.scol||'Student')}</div>
+          ${l.sphone?`<div class="sph"><a href="tel:${esc(l.sphone)}" style="color:var(--pr);font-weight:600;text-decoration:none;">📞 ${esc(l.sphone)}</a></div>`:''}
+        </div>
+        <div class="srat">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          ${l.srat||4.5}
+        </div>
+      </div>
+      <div class="macts">
+        ${isOwn
+          ? `<button class="bdel" onclick="delLst('${l.id}')">
+               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>Delete
+             </button>
+             <button class="bsold" onclick="markSold('${l.id}')">
+               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>Mark Sold
+             </button>`
+          : `<button class="bcht" onclick="contactSell('${l.id}')">
+               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Chat
+             </button>
+             <button class="bbuy" onclick="handleBuy('${l.id}')">
+               <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Buy Now
+             </button>`
+        }
+      </div>
+      <div class="mextra">
+        <button class="bsave${w?' on':''}" onclick="togWish(event,'${l.id}')">${hrt} ${w?'Saved':'Save'}</button>
+        <button class="bshr" onclick="shareItem('${l.id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share
+        </button>
+      </div>
+    </div>`;
+  // Store images on window for swapImg
+  window._modImgs = imgs;
+}
+function swapImg(idx){
+  const imgs=window._modImgs||[]; if(!imgs[idx]) return;
+  const main=document.getElementById('mimg-main'); if(main) main.src=imgs[idx];
+  // Update dot widths
+  imgs.forEach((_,i)=>{
+    const dot=document.getElementById('mdot-'+i);
+    if(dot){ dot.style.width=i===idx?'18px':'6px'; dot.style.background=i===idx?'#fff':'rgba(255,255,255,.5)'; }
+  });
+}
+function closeMod(){ MOD_ID=null; window._modImgs=[]; document.getElementById('pmod').classList.remove('on'); document.body.style.overflow=''; }
+function onMBG(e){ if(e.target===document.getElementById('pmod')) closeMod(); }
+
+function contactSell(lid){
+  const l=DB.lst.byId(lid); if(!l) return;
+  DB.msg.send(l.sid,lid,`Hi! I'm interested in your "${l.title}". Is it still available?`);
+  toast(`💬 Message sent to ${l.sname}!`); closeMod(); updateBadges();
+}
+function handleBuy(lid){
+  const l=DB.lst.byId(lid); if(!l) return;
+  if(!confirm(`Buy "${l.title}" for ₹${l.price.toLocaleString()}?\n\nThis will send a message to ${l.sname} to arrange meetup.`)) return;
+  DB.msg.send(l.sid,lid,`I'd like to buy your "${l.title}" for ₹${l.price}. When can we meet?`);
+  toast(`✅ Buy request sent to ${l.sname}!`); closeMod(); updateBadges();
+}
+function markSold(id){
+  if(!confirm('Mark as sold? It will move to your Sold tab.')) return;
+  DB.lst.markSold(id); closeMod(); renderListings(); renderProfile();
+  toast('🎉 Item marked as sold!');
+}
+function delLst(id){
+  if(!confirm('Delete this listing permanently?')) return;
+  DB.lst.del(id); closeMod(); renderListings(); renderProfile();
+  toast('🗑️ Listing deleted.');
+}
+function shareItem(lid){
+  const l=DB.lst.byId(lid), t=l?l.title:'this item';
+  if(navigator.share){ navigator.share({title:'CampusCart',text:`Check out "${t}"`,url:location.href}).catch(()=>{}); }
+  else{ try{navigator.clipboard.writeText(location.href); toast('🔗 Link copied!');}catch(e){toast('🔗 Share: '+location.href);} }
+}
+
+/* ─────────────────────────────────────────────────────────
+   SELL FORM
+───────────────────────────────────────────────────────── */
+function resetSell(){
+  IMGS=[];
+  document.getElementById('pvg').innerHTML='';
+  ['st','sc','sco','sp','sm','sd','sl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const b=document.getElementById('pbtn');
+  b.disabled=false;
+  b.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> Post Listing';
+}
+function onDragOver(e){ e.preventDefault(); document.getElementById('upz').classList.add('drag'); }
+function onDragLeave(){ document.getElementById('upz').classList.remove('drag'); }
+function onDrop(e){ e.preventDefault(); document.getElementById('upz').classList.remove('drag'); procFiles(e.dataTransfer.files); }
+function onFSel(e){ procFiles(e.target.files); e.target.value=''; }
+function procFiles(files){
+  const rem=5-IMGS.length;
+  Array.from(files).slice(0,rem).forEach(f=>{
+    if(!f.type.startsWith('image/')){ toast('⚠️ Only image files allowed'); return; }
+    if(f.size>5*1024*1024){ toast('⚠️ Max 5MB per image'); return; }
+    const r=new FileReader();
+    r.onload=ev=>{ IMGS.push(ev.target.result); renderPrev(); };
+    r.readAsDataURL(f);
+  });
+  if(rem===0) toast('⚠️ Max 5 photos reached');
+}
+function renderPrev(){
+  document.getElementById('pvg').innerHTML=IMGS.map((src,i)=>`
+    <div class="pvi">
+      <img src="${src}" alt="photo ${i+1}"/>
+      <div class="pvrm" onclick="rmImg(${i})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+    </div>`).join('');
+}
+function rmImg(i){ IMGS.splice(i,1); renderPrev(); }
+function submitListing(){
+  const t=document.getElementById('st').value.trim();
+  const c=document.getElementById('sc').value;
+  const co=document.getElementById('sco').value;
+  const p=parseFloat(document.getElementById('sp').value);
+  const m=parseFloat(document.getElementById('sm').value)||null;
+  const d=document.getElementById('sd').value.trim();
+  const l=document.getElementById('sl').value.trim();
+  if(!t) return toast('⚠️ Please add a title');
+  if(!c) return toast('⚠️ Please select a category');
+  if(!co) return toast('⚠️ Please select the condition');
+  if(!p||p<1) return toast('⚠️ Please enter a valid price');
+  if(!d) return toast('⚠️ Please add a description');
+  // Null out MRP if it's not actually higher than the selling price
+  const mrp = (m && m > p) ? m : null;
+  const btn=document.getElementById('pbtn');
+  btn.disabled=true;
+  btn.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:sp .8s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Posting…';
+  setTimeout(()=>{
+    const r=DB.lst.add({title:t,cat:c,cond:co,price:p,mrp,desc:d,loc:l,imgs:[...IMGS]});
+    btn.disabled=false;
+    if(r.error){ btn.innerHTML='Post Listing'; return toast('❌ '+r.error); }
+    toast('🎉 Listing posted successfully!');
+    resetSell(); goTo('home');
+  },700);
+}
+
+/* ─────────────────────────────────────────────────────────
+   PROFILE
+───────────────────────────────────────────────────────── */
+function renderProfile(){
+  const u=DB.auth.me(); if(!u) return;
+  document.getElementById('prav').textContent=u.name.charAt(0).toUpperCase();
+  document.getElementById('prname').textContent=u.name;
+  document.getElementById('prcol').textContent=u.college||'Student';
+  const all=DB.lst.byUser(u.id);
+  document.getElementById('st-a').textContent=all.filter(l=>l.status==='active').length;
+  document.getElementById('st-s').textContent=all.filter(l=>l.status==='sold').length;
+  document.getElementById('st-w').textContent=DB.wish.mine().length;
+  renderMyListings(PTAB);
+}
+function sPTab(tab,el){
+  PTAB=tab;
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderMyListings(tab);
+}
+function renderMyListings(tab){
+  const u=DB.auth.me(); if(!u) return;
+  const g=document.getElementById('mygrid'), e=document.getElementById('myempty');
+  const ls=tab==='sold'?DB.lst.sold(u.id):DB.lst.byUser(u.id).filter(l=>l.status==='active');
+  if(!ls.length){ g.innerHTML=''; e.style.display='block'; return; }
+  e.style.display='none'; g.innerHTML=ls.map(cardHTML).join('');
+}
+
+/* EDIT PROFILE */
+function openEdit(){
+  const u=DB.auth.me(); if(!u) return;
+  document.getElementById('emn').value=u.name||'';
+  document.getElementById('emc').value=u.college||'';
+  document.getElementById('emp').value=u.phone||'';
+  document.getElementById('emmod').classList.add('on');
+}
+function closeEdit(){ document.getElementById('emmod').classList.remove('on'); }
+function onEMBG(e){ if(e.target===document.getElementById('emmod')) closeEdit(); }
+function saveProf(){
+  const name=document.getElementById('emn').value.trim();
+  if(!name) return toast('⚠️ Name cannot be empty');
+  DB.auth.update({
+    name, college:document.getElementById('emc').value.trim()||'Student',
+    phone:document.getElementById('emp').value.trim()
+  });
+  closeEdit(); renderProfile(); updateNavAv(); toast('✅ Profile updated!');
+}
+
+/* ─────────────────────────────────────────────────────────
+   MESSAGES
+───────────────────────────────────────────────────────── */
+function renderMessages(){
+  const list=document.getElementById('clist'), empty=document.getElementById('mempty');
+  const msgs=DB.msg.inbox();
+  if(!msgs.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  const u=DB.auth.me();
+  const convos={};
+  msgs.forEach(m=>{
+    const othId=m.fid===u.id?m.tid:m.fid;
+    // Determine the other person's name correctly
+    let othName=m.fid===u.id?null:m.fname;
+    if(!othName){
+      // Sent message — look up the listing to get seller name, or use "You → [seller]"
+      const l=DB.lst.byId(m.lid);
+      othName=l?l.sname:'Unknown';
+    }
+    if(!convos[othId]||new Date(m.at)>new Date(convos[othId].at)){
+      convos[othId]={...m,othName,unread:m.tid===u.id&&!m.read};
+    }
+  });
+  list.innerHTML=Object.values(convos)
+    .sort((a,b)=>new Date(b.at)-new Date(a.at))
+    .map(c=>`
+    <div class="ci" onclick="openConv('${c.fid===u.id?c.tid:c.fid}')">
+      <div class="cav">${(c.othName||'?').charAt(0).toUpperCase()}</div>
+      <div class="cinf">
+        <div class="cname">${esc(c.othName)}</div>
+        <div class="cprev">${esc(c.text)}</div>
+      </div>
+      <div class="cmeta">
+        <div class="ctime">${timeAgo(c.at)}</div>
+        ${c.unread?'<div class="cbadge">New</div>':''}
+      </div>
+    </div>`).join('');
+}
+function openConv(othId){ DB.msg.markRead(othId); updateBadges(); renderMessages(); }
+
+/* ─────────────────────────────────────────────────────────
+   BOOT
+───────────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded',()=>{
+  DB.seed();
+  const u=DB.auth.me();
+  if(u) launchApp(u);
+  document.getElementById('le').addEventListener('keydown',e=>e.key==='Enter'&&doLogin());
+  document.getElementById('lp').addEventListener('keydown',e=>e.key==='Enter'&&doLogin());
+  document.getElementById('rp').addEventListener('keydown',e=>e.key==='Enter'&&doReg());
+});
+</script>
+</body>
+</html>
